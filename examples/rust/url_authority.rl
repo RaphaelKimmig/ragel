@@ -42,17 +42,17 @@ use std::vec;
 // who would have thought this could be so hard ._.
 */
 
-#[deriving(Eq)]
+#[deriving(Eq,Show)]
 pub struct Url {
-    scheme   : ~str, // http, sip, file, etc. (never blank, always lowercase)
-    user     : ~str, // who is you
-    pass     : ~str, // for like, logging in
-    host     : ~str, // IP 4/6 address or hostname (mandatory)
-    port     : u16,  // like 80 or 5060
-    params   : ~str, // stuff after ';' (NOT UNESCAPED, used in sip)
-    path     : ~str, // stuff starting with '/'
-    query    : ~str, // stuff after '?' (NOT UNESCAPED)
-    fragment : ~str, // stuff after '#'
+   pub  scheme   : ~str, // http, sip, file, etc. (never blank, always lowercase)
+   pub  user     : ~str, // who is you
+   pub  pass     : ~str, // for like, logging in
+   pub  host     : ~str, // IP 4/6 address or hostname (mandatory)
+   pub  port     : u16,  // like 80 or 5060
+   pub  params   : ~str, // stuff after ';' (NOT UNESCAPED, used in sip)
+   pub  path     : ~str, // stuff starting with '/'
+   pub  query    : ~str, // stuff after '?' (NOT UNESCAPED)
+   pub  fragment : ~str, // stuff after '#'
 }
 
 pub fn parse_authority(url: &mut Url, data: &[u8]) -> Result<(), ~str> {
@@ -72,7 +72,7 @@ pub fn parse_authority(url: &mut Url, data: &[u8]) -> Result<(), ~str> {
     let mut b2 = ~"";
 
     // this buffer is so we can unescape while we roll
-    let mut buf = vec::with_capacity(16);
+    let mut buf = Vec::with_capacity(16);
     let mut hex = 0;
 
     fn parse_port(s: &str) -> Option<u16> {
@@ -104,11 +104,11 @@ pub fn parse_authority(url: &mut Url, data: &[u8]) -> Result<(), ~str> {
         }
 
         action copy_b1   {
-            b1 = str::from_utf8(buf).unwrap().to_owned();
+            b1 = str::from_utf8(buf.as_slice()).unwrap().to_owned();
             buf.clear();
         }
         action copy_b2   {
-            b2 = str::from_utf8(buf).unwrap().to_owned();
+            b2 = str::from_utf8(buf.as_slice()).unwrap().to_owned();
             buf.clear();
         }
         action copy_host {
@@ -147,10 +147,10 @@ pub fn parse_authority(url: &mut Url, data: &[u8]) -> Result<(), ~str> {
             url.host = b1.clone();
 
             if str::eq_slice(url.host, "") {
-                url.host = str::from_utf8(buf).unwrap().to_owned();
+                url.host = str::from_utf8(buf.as_slice()).unwrap().to_owned();
             } else {
                 if buf.len() > 0 {
-                    b2 = str::from_utf8(buf).unwrap().to_owned();
+                    b2 = str::from_utf8(buf.as_slice()).unwrap().to_owned();
                 }
                 match parse_port(b2) {
                     None => {

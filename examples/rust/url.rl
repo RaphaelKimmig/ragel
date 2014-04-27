@@ -27,8 +27,9 @@
 // - http://tools.ietf.org/html/rfc3986
 //
 
-extern crate extra;
+extern crate url;
 
+use url::from_str;
 use std::char;
 use std::str;
 use std::vec;
@@ -64,7 +65,7 @@ pub fn url_parse(data: &[u8]) -> Result<Url, ~str> {
     let mut url = dummy();
    
     // this buffer is so we can unescape while we roll
-    let mut buf = vec::with_capacity(500);
+    let mut buf = Vec::with_capacity(500);
     let mut hex = 0;
 
     %%{
@@ -89,7 +90,7 @@ pub fn url_parse(data: &[u8]) -> Result<Url, ~str> {
         }
 
         action scheme {
-            url.scheme = str::from_utf8(buf).unwrap().to_owned();
+            url.scheme = str::from_utf8(buf.as_slice()).unwrap().to_owned();
         }
 
         action authority {
@@ -101,7 +102,7 @@ pub fn url_parse(data: &[u8]) -> Result<Url, ~str> {
         }
 
         action path     {
-            url.path = str::from_utf8(buf).unwrap().to_owned();
+            url.path = str::from_utf8(buf.as_slice()).unwrap().to_owned();
         }
 
         action query {
@@ -109,7 +110,7 @@ pub fn url_parse(data: &[u8]) -> Result<Url, ~str> {
         }
 
         action fragment {
-            url.fragment = str::from_utf8(buf).unwrap().to_owned();
+            url.fragment = str::from_utf8(buf.as_slice()).unwrap().to_owned();
         }
 
         # define what a single character is allowed to be
@@ -342,7 +343,7 @@ mod tests {
 #[cfg(test)]
 mod bench {
     extern crate test;
-    extern crate extra;
+    extern crate url;
 
     use super::url_parse;
     use self::test::BenchHarness;
@@ -413,63 +414,63 @@ mod bench {
     #[bench]
     fn benchmark_extra_url_1(bh: &mut BenchHarness) {
         bh.iter(|| {
-            let _x = extra::url::from_str("a:a");
+            let _x = url::from_str("a:a");
         })
     }
 
     #[bench]
     fn benchmark_extra_url_2(bh: &mut BenchHarness) {
         bh.iter(|| {
-            let _x = extra::url::from_str("http://google.com/");
+            let _x = url::from_str("http://google.com/");
         })
     }
 
     #[bench]
     fn benchmark_extra_url_3(bh: &mut BenchHarness) {
         bh.iter(|| {
-            let _x = extra::url::from_str("sip:jtunney@lobstertech.com");
+            let _x = url::from_str("sip:jtunney@lobstertech.com");
         })
     }
 
     #[bench]
     fn benchmark_extra_url_4(bh: &mut BenchHarness) {
         bh.iter(|| {
-            let _x = extra::url::from_str("http://user:pass@example.com");
+            let _x = url::from_str("http://user:pass@example.com");
         })
     }
 
     #[bench]
     fn benchmark_extra_url_5(bh: &mut BenchHarness) {
         bh.iter(|| {
-            let _x = extra::url::from_str("http://user:pass@example.com:80");
+            let _x = url::from_str("http://user:pass@example.com:80");
         })
     }
 
     #[bench]
     fn benchmark_extra_url_6(bh: &mut BenchHarness) {
         bh.iter(|| {
-            let _x = extra::url::from_str("http://user:pass@example.com:80;hello");
+            let _x = url::from_str("http://user:pass@example.com:80;hello");
         })
     }
 
     #[bench]
     fn benchmark_extra_url_7(bh: &mut BenchHarness) {
         bh.iter(|| {
-            let _x = extra::url::from_str("http://user:pass@example.com:80;hello/lol.php");
+            let _x = url::from_str("http://user:pass@example.com:80;hello/lol.php");
         })
     }
 
     #[bench]
     fn benchmark_extra_url_8(bh: &mut BenchHarness) {
         bh.iter(|| {
-            let _x = extra::url::from_str("http://user:pass@example.com:80;hello/lol.php?fun");
+            let _x = url::from_str("http://user:pass@example.com:80;hello/lol.php?fun");
         })
     }
 
     #[bench]
     fn benchmark_extra_url_9(bh: &mut BenchHarness) {
         bh.iter(|| {
-            let _x = extra::url::from_str("http://user:pass@example.com:80;hello/lol.php?fun#omg");
+            let _x = url::from_str("http://user:pass@example.com:80;hello/lol.php?fun#omg");
         })
     }
 }
