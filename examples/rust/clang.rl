@@ -4,7 +4,7 @@
 
 use std::io;
 use std::str;
-use std::vec;
+use std::char;
 
 %%{
     machine clang;
@@ -84,7 +84,7 @@ static BUFSIZE: uint = 2048;
 
 #[allow(dead_assignment, unused_variable)]
 fn main() {
-    let mut data = vec::from_elem(BUFSIZE, 0u8);
+    let mut data: [u8, ..500] = [0, ..500];
 
     let mut cs: int;
     let mut act: uint;
